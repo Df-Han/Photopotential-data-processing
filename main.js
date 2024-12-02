@@ -4,63 +4,63 @@ let selectedType = '';
 let standard = 0;
 let selectedPoint = null;
 
-// 修改layout配置
+
 let layout = {
     xaxis: {
         title: {
             text: 'Time/s',
             font: { 
                 size: 25,
-                weight: 'bold'  // 加粗标签
+                weight: 'bold'  
             }
         },
         showgrid: true,
         gridwidth: 1,
         gridcolor: '#E1E1E1',
         gridstyle: 'dash',
-        dtick: 5,  // 保持x轴网格间距为5
-        zeroline: false,  // 关闭x轴零线
+        dtick: 5,  
+        zeroline: false,  
         showline: true,
         linewidth: 2,
         linecolor: 'black',
-        mirror: false,  // 不显示上轴
+        mirror: false,  
         ticks: 'outside',
         tickfont: { 
             size: 12,
-            weight: 'bold'  // 加粗刻度数字
+            weight: 'bold' 
         },
-        side: 'bottom'  // 确保轴在底部
+        side: 'bottom' 
     },
     yaxis: {
         title: {
             text: 'Potential/V',
             font: { 
                 size: 25,
-                weight: 'bold'  // 加粗标签
+                weight: 'bold' 
             }
         },
         showgrid: true,
         gridwidth: 1,
         gridcolor: '#E1E1E1',
         gridstyle: 'dash',
-        dtick: 0.2,  // 将y轴网格间距改回0.2
-        zeroline: false,  // 关闭y轴零线
+        dtick: 0.2,  
+        zeroline: false,  
         showline: true,
         linewidth: 2,
         linecolor: 'black',
-        mirror: false,  // 不显示右轴
+        mirror: false,  
         ticks: 'outside',
         tickfont: { 
             size: 12,
-            weight: 'bold'  // 加粗刻度数字
+            weight: 'bold'  
         },
-        side: 'left'  // 确保轴在左侧
+        side: 'left'  
     },
     hovermode: 'closest',
     showlegend: false,
     plot_bgcolor: 'white',
     paper_bgcolor: 'white',
-    margin: {  // 调整边距以适应加粗的标签
+    margin: {  
         l: 80,
         r: 20,
         t: 20,
@@ -94,7 +94,7 @@ document.getElementById('inputBtn').addEventListener('click', () => {
     fileInput.click();
 });
 
-// 显示半导体类型选择对话框
+
 function showSemiconductorTypeDialog() {
     return new Promise((resolve) => {
         const dialog = document.createElement('div');
@@ -127,15 +127,15 @@ function showSemiconductorTypeDialog() {
     });
 }
 
-// 处理数据文件
+
 function processDataFile(text) {
     try {
-        // 分割文本为行
+        
         const lines = text.split('\n')
-            .filter(line => line.trim()) // 移除空行
+            .filter(line => line.trim()) 
             .map(line => line.trim());
 
-        // 找到数据开始的行（跳过可能的头部注释）
+        
         let startIndex = 0;
         while (startIndex < lines.length) {
             const values = lines[startIndex].split(/[,\s]+/).map(Number);
@@ -145,7 +145,7 @@ function processDataFile(text) {
             startIndex++;
         }
 
-        // 解析数据
+        
         rawData = lines.slice(startIndex)
             .map(line => {
                 const values = line.split(/[,\s]+/).map(Number);
@@ -169,7 +169,7 @@ function processDataFile(text) {
     }
 }
 
-// 计算standard值
+
 function calculateStandard() {
     const first100 = rawData.slice(0, 100);
     let maxDiff = 0;
@@ -182,7 +182,7 @@ function calculateStandard() {
     standard = maxDiff;
 }
 
-// 处理数据
+
 function processData() {
     processedData = [];
     
@@ -194,7 +194,7 @@ function processData() {
             if (diff > standard * 10 && prevDiff <= standard * 10) {
                 processedData.push(rawData[i]);
             }
-        } else { // type === 'p'
+        } else { 
             if (diff < -standard * 10 && prevDiff >= -standard * 10) {
                 processedData.push(rawData[i]);
             }
@@ -202,7 +202,7 @@ function processData() {
     }
 }
 
-// n/p按钮处理
+
 document.getElementById('npBtn').addEventListener('click', async () => {
     try {
         const type = await showSemiconductorTypeDialog();
@@ -216,7 +216,7 @@ document.getElementById('npBtn').addEventListener('click', async () => {
     }
 });
 
-// Add按钮处理
+
 document.getElementById('addBtn').addEventListener('click', async () => {
     const dialog = document.createElement('div');
     dialog.style.cssText = `
@@ -241,7 +241,7 @@ document.getElementById('addBtn').addEventListener('click', async () => {
     document.getElementById('confirmAdd').onclick = () => {
         const value = parseFloat(document.getElementById('timeInput').value);
         if (!isNaN(value)) {
-            // 找到最接近的点
+           
             let closest = rawData[0];
             let minDiff = Math.abs(value - closest.x);
             
@@ -260,7 +260,7 @@ document.getElementById('addBtn').addEventListener('click', async () => {
     };
 });
 
-// Output按钮处理
+
 document.getElementById('outputBtn').addEventListener('click', async () => {
     const dialog = document.createElement('div');
     dialog.style.cssText = `
@@ -295,14 +295,14 @@ document.getElementById('outputBtn').addEventListener('click', async () => {
     };
 });
 
-// 生成CSV文件（修正后的版本）
+
 function generateCSV(excitationTime) {
-    // 创建CSV内容
+    
     let csvContent = 'Dark field time,Dark potential,Excitation time,Photopotential,Light-dark potential difference\n';
     
     processedData.forEach(point => {
         const excitationTimePoint = point.x + excitationTime;
-        // 找到最接近的光照电位点
+        
         let closestPhotoPoint = rawData[0];
         let minTimeDiff = Math.abs(excitationTimePoint - rawData[0].x);
         
@@ -316,16 +316,16 @@ function generateCSV(excitationTime) {
 
         const potentialDiff = closestPhotoPoint.y - point.y;
         const row = [
-            point.x.toFixed(6),                    // Dark field time
-            point.y.toFixed(6),                    // Dark potential
-            excitationTimePoint.toFixed(6),        // Excitation time
-            closestPhotoPoint.y.toFixed(6),        // Photopotential
-            potentialDiff.toFixed(6)               // Light-dark potential difference
+            point.x.toFixed(6),                    
+            point.y.toFixed(6),                    
+            excitationTimePoint.toFixed(6),        
+            closestPhotoPoint.y.toFixed(6),        
+            potentialDiff.toFixed(6)               
         ].join(',');
         csvContent += row + '\n';
     });
 
-    // 创建并下载文件
+    
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -336,7 +336,7 @@ function generateCSV(excitationTime) {
     document.body.removeChild(link);
 }
 
-// 创建图表（修改后的版本）
+
 function createPlot() {
     const traces = [
         {
@@ -353,7 +353,7 @@ function createPlot() {
         }
     ];
 
-    // 只有在没有选中点时才显示所有红点
+    
     if (!selectedPoint) {
         traces.push({
             x: processedData.map(point => point.x),
@@ -368,7 +368,7 @@ function createPlot() {
             hoverinfo: 'x+y'
         });
     } else {
-        // 当有选中点时，只显示紫色的点
+        
         traces.push({
             x: [selectedPoint.x],
             y: [selectedPoint.y],
@@ -387,12 +387,12 @@ function createPlot() {
         .then(() => {
             const plotArea = document.getElementById('plotArea');
             
-            // 移除旧的事件监听器
+           
             if (plotArea.removeAllListeners) {
                 plotArea.removeAllListeners('plotly_click');
             }
             
-            // 添加新的点击事件监听器
+            
             plotArea.on('plotly_click', (data) => {
                 if (!data.points || data.points.length === 0) return;
                 
@@ -400,16 +400,16 @@ function createPlot() {
                 const clickedX = point.x;
                 const clickedY = point.y;
 
-                // 只有在没有选中点时才允许选择新的点
+                
                 if (!selectedPoint) {
-                    // 检查是否点击了红点
+                   
                     const isProcessedPoint = processedData.some(p => 
                         Math.abs(p.x - clickedX) < 0.0001 && 
                         Math.abs(p.y - clickedY) < 0.0001
                     );
 
                     if (isProcessedPoint) {
-                        // 记录原始点的位置，用于后续处理
+                        
                         selectedPoint = { 
                             x: clickedX, 
                             y: clickedY,
@@ -425,7 +425,7 @@ function createPlot() {
         });
 }
 
-// 键盘事件处理
+
 document.addEventListener('keydown', function(event) {
     if (!selectedPoint) return;
 
@@ -469,7 +469,7 @@ document.addEventListener('keydown', function(event) {
             createPlot();
             break;
         case 'Delete':
-            // 从processedData中删除点
+            
             if (selectedPoint.originalIndex !== -1) {
                 processedData.splice(selectedPoint.originalIndex, 1);
             }
@@ -479,7 +479,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// 按钮事件处理
+
 document.getElementById('leftBtn').addEventListener('click', () => {
     const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
     document.dispatchEvent(event);
