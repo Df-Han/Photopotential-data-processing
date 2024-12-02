@@ -1,7 +1,7 @@
-Data Processing and Visualization Tool
-Overview
-This tool is designed for processing and analyzing time-series potential data, specifically for semiconductor photoelectric response analysis. It provides an interactive interface for data visualization, point selection, and data export.
-Key Features
+# Data Processing and Visualization Tool  
+## Overview  
+This tool is designed for processing and analyzing time-series potential data, specifically for semiconductor photoelectric response analysis. It provides an interactive interface for data visualization, point selection, and data export.  
+## Key Features  
 Data Import
 Accepts .txt files containing time-series data
 Supports both n-type and p-type semiconductor data
