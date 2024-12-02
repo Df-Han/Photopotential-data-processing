@@ -27,14 +27,14 @@ Select your .txt data file
 Choose semiconductor type (n/p)  
 Data will be automatically processed and displayed  
 ### 2. Point Selection and Editing  
-Select Points: Click on any red point to select it (turns purple)  
-Move Points:  
+**Select Points**: Click on any red point to select it (turns purple)  
+**Move Points**:  
 Use left/right arrow keys  
 Or use the "←" and "→" buttons  
-Confirm Changes:  
+**Confirm Changes**:  
 Press Enter key  
 Or click the "Confirm" button  
-Delete Points:  
+**Delete Points**:  
 Press Delete key  
 Or click the "Delete" button  
 ### 3. Additional Controls  
